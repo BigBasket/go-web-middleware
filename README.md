@@ -1,9 +1,10 @@
-# gopkg
+# go-web-middleware
 
 # Import Package
-go get github.com/BigBasket/go-web-middleware
-
-The Objective is to manage common middlewares needed for golang web applications.
+```go
+    go get github.com/BigBasket/go-web-middleware
+```
+The Objective of this package is to manage common middlewares needed for golang web applications.
 
 ## JWT-RSA
 web apis that are using rsa-jwt token for security can instrument the middleware to parse and validate the token.
