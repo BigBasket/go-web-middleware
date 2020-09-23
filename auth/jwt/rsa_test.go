@@ -16,6 +16,7 @@ type rsaTestSuite struct {
 }
 
 func TestRSAMiddlewareSuite(t *testing.T) {
+	t.Parallel()
 	tSuite := &rsaTestSuite{}
 	suite.Run(t, tSuite)
 }
@@ -33,8 +34,7 @@ func (t *rsaTestSuite) TestRSAValidTokenMiddleware() {
 	req := httptest.NewRequest(http.MethodGet, "/order/1", nil)
 	req.Header.Add(BearerAuthHeader, t.token)
 	res := httptest.NewRecorder()
-	handler(res, req)
-	jwtDecode := &Decode{
+	jwtDecode := &RSADecode{
 		PublicKey: t.publickey,
 		Algorithm: jwa.RS256,
 	}
@@ -47,8 +47,7 @@ func (t *rsaTestSuite) TestRSAMissingAuthHeaderMiddleware() {
 	handler := func(w http.ResponseWriter, r *http.Request) {}
 	req := httptest.NewRequest(http.MethodGet, "/order/1", nil)
 	res := httptest.NewRecorder()
-	handler(res, req)
-	jwtDecode := &Decode{
+	jwtDecode := &RSADecode{
 		PublicKey: t.publickey,
 		Algorithm: jwa.RS256,
 	}
@@ -61,8 +60,7 @@ func (t *rsaTestSuite) TestRSAInvalidPublicKeyMiddleware() {
 	handler := func(w http.ResponseWriter, r *http.Request) {}
 	req := httptest.NewRequest(http.MethodGet, "/order/1", nil)
 	res := httptest.NewRecorder()
-	handler(res, req)
-	jwtDecode := &Decode{
+	jwtDecode := &RSADecode{
 		PublicKey: "",
 		Algorithm: jwa.RS256,
 	}

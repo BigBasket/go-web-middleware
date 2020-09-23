@@ -30,8 +30,8 @@ const (
 	Base64 EncodingType = "base64"
 )
 
-// Decode - object which implements the jwt token
-type Decode struct {
+// RSADecode - object which implements the jwt token
+type RSADecode struct {
 	PublicKey             string
 	Algorithm             jwa.SignatureAlgorithm
 	PublicKeyEncodingType EncodingType
@@ -62,8 +62,8 @@ func ParseBase64EncodedRSAPublicKey(key string) (*rsa.PublicKey, error) {
 }
 
 // InstrumentJWTBearerToken - sets the jwt claims to the context headers.
-func (decode Decode) InstrumentJWTBearerToken(next http.HandlerFunc) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func (decode RSADecode) InstrumentJWTBearerToken(next http.HandlerFunc) http.HandlerFunc {
+	fn := func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get(BearerAuthHeader)
 		if strings.TrimSpace(authHeader) == "" { //authorization header is empty
 			w.WriteHeader(http.StatusUnauthorized)
@@ -117,5 +117,6 @@ func (decode Decode) InstrumentJWTBearerToken(next http.HandlerFunc) http.Handle
 			return
 		}
 		next.ServeHTTP(w, r)
-	})
+	}
+	return fn
 }
